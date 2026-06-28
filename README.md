@@ -1,119 +1,210 @@
 # User Management Dashboard
 
-A single-page User Management Dashboard built with React 19 and Vite. It lists
-users in a responsive table and supports full create, read, update, and delete
-operations, along with search, sorting, filtering, and pagination.
+A responsive User Management Dashboard built with **React 19** and **Vite**. The application allows users to view, add, edit, delete, search, sort, filter, and paginate user records using the JSONPlaceholder mock REST API.
 
-The app talks to the JSONPlaceholder mock API. Since JSONPlaceholder does not
-persist changes, every successful create, update, and delete also updates the
-local React state so the interface behaves like a real application.
+## Live Demo
+
+* **Live Application:** https://user-managementboard.netlify.app
+* **GitHub Repository:** https://github.com/Thiru7869/User-Management-Dashboard
+
+---
 
 ## Features
 
-- **User table** with ID, First Name, Last Name, Email, Department, and Actions
-- **Add / Edit / Delete** users through modals, with a confirmation step before deleting
-- **Form validation** for required fields, minimum name length, valid email, and department
-- **Search** across first name, last name, and email, debounced by 300ms
-- **Sorting** by first name, last name, email, or department (ascending / descending) via a dropdown or by clicking column headers
-- **Filtering** through a popup with Apply and Reset actions
-- **Client-side pagination** with selectable page sizes (10, 25, 50, 100) and Previous / Next controls
-- **Loading, empty, and error states** with friendly messages and a retry action
-- **Responsive design** — a full table on desktop, a scrollable table on tablet, and stacked cards on mobile
+* View all users in a responsive table
+* Add new users
+* Edit existing users
+* Delete users with confirmation
+* Search users by first name, last name, or email
+* Sort users by:
 
-Departments are not provided by the API, so each user is split into first and
-last name and assigned a consistent department from a fixed list (Engineering,
-HR, Finance, Marketing, Sales, Support, Operations).
+  * First Name
+  * Last Name
+  * Email
+  * Department
+* Filter users using a popup
+* Client-side pagination with:
+
+  * 10 users/page
+  * 25 users/page
+  * 50 users/page
+  * 100 users/page
+* Responsive layout for desktop, tablet, and mobile
+* Loading state
+* Empty state
+* Error handling with Retry option
+* Client-side form validation
+
+---
 
 ## Tech Stack
 
-- React 19
-- Vite
-- JavaScript (no TypeScript)
-- Plain CSS (no Tailwind)
-- Axios
-- React Icons
+* React 19
+* Vite
+* JavaScript (ES6+)
+* Axios
+* React Icons
+* Plain CSS
+
+---
 
 ## Installation
 
-Requires Node.js 18 or newer.
+### Prerequisites
+
+* Node.js 18 or later
+* npm
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/Thiru7869/User-Management-Dashboard.git
+
+cd User-Management-Dashboard
+```
+
+### Install Dependencies
 
 ```bash
 npm install
+```
+
+### Run Development Server
+
+```bash
 npm run dev
 ```
 
-Then open the URL printed in the terminal (default `http://localhost:5173`).
+Open:
 
-To create a production build:
+```
+http://localhost:5173
+```
+
+### Production Build
 
 ```bash
 npm run build
 npm run preview
 ```
 
+---
+
 ## API Used
 
-[JSONPlaceholder](https://jsonplaceholder.typicode.com/users)
+The project uses the free mock REST API:
 
-| Method | Endpoint     | Purpose          |
-| ------ | ------------ | ---------------- |
-| GET    | `/users`     | Load all users   |
-| POST   | `/users`     | Create a user    |
-| PUT    | `/users/:id` | Update a user    |
-| DELETE | `/users/:id` | Delete a user    |
+https://jsonplaceholder.typicode.com/users
 
-JSONPlaceholder accepts these requests but does not save the changes, so the UI
-reflects them by updating local state after each successful response.
+| Method | Endpoint   | Purpose         |
+| ------ | ---------- | --------------- |
+| GET    | /users     | Fetch all users |
+| POST   | /users     | Create a user   |
+| PUT    | /users/:id | Update a user   |
+| DELETE | /users/:id | Delete a user   |
+
+Since JSONPlaceholder is a mock API, POST, PUT, and DELETE requests return successful responses but do not permanently save data. The application updates the local React state to simulate persistent CRUD functionality.
+
+---
 
 ## Folder Structure
 
 ```
 src/
-  components/
-    UserTable.jsx
-    UserRow.jsx
-    UserForm.jsx
-    FilterModal.jsx
-    Pagination.jsx
-    SearchBar.jsx
-    SortDropdown.jsx
-    Navbar.jsx
-    Loader.jsx
-  services/
-    api.js
-  utils/
-    validation.js
-    helpers.js
-  hooks/
-    useUsers.js
-  App.jsx
-  main.jsx
-  App.css
-  index.css
+│
+├── components/
+│   ├── FilterModal.jsx
+│   ├── Loader.jsx
+│   ├── Navbar.jsx
+│   ├── Pagination.jsx
+│   ├── SearchBar.jsx
+│   ├── SortDropdown.jsx
+│   ├── UserForm.jsx
+│   ├── UserRow.jsx
+│   └── UserTable.jsx
+│
+├── hooks/
+│   └── useUsers.js
+│
+├── services/
+│   └── api.js
+│
+├── utils/
+│   ├── helpers.js
+│   └── validation.js
+│
+├── App.jsx
+├── App.css
+├── main.jsx
+└── index.css
 ```
 
-State is handled entirely with React hooks (`useState`, `useEffect`, `useMemo`,
-`useCallback`). Data fetching and the CRUD operations live in the `useUsers`
-hook; the rest of the UI state (search, sort, filters, pagination, modals) is
-managed in `App.jsx`. No Redux, Zustand, or Context API is used.
+---
 
-## Challenges
+## State Management
 
-- **No real persistence.** JSONPlaceholder discards writes, so the app keeps its
-  own copy of the data in state and merges every successful response into it.
-- **Generated fields.** First name, last name, and department do not exist on the
-  API. Names are split from the single `name` field and departments are derived
-  deterministically from the user ID so they stay consistent across reloads.
-- **Unique IDs for new users.** POST always returns ID 11, which would collide on
-  repeated adds, so new users get a locally generated incremental ID instead.
-- **Coordinating search, filter, sort, and pagination** so they compose correctly
-  and the current page resets when the result set changes.
+The application uses React Hooks only:
+
+* useState
+* useEffect
+* useMemo
+* useCallback
+
+The custom `useUsers` hook handles:
+
+* Fetching users
+* Creating users
+* Updating users
+* Deleting users
+* API loading state
+* Error handling
+
+UI state such as search, filters, sorting, pagination, and modal visibility is managed inside `App.jsx`.
+
+---
+
+## Assumptions
+
+* JSONPlaceholder provides only a single `name` field, so it is split into first and last names.
+* Departments are not available in the API and are generated deterministically from user IDs.
+* Since JSONPlaceholder does not persist changes, CRUD operations are reflected by updating the local React state.
+* Pagination, filtering, and sorting are implemented on the client side.
+
+---
+
+## Challenges Faced
+
+* JSONPlaceholder does not permanently store created, updated, or deleted users.
+* Generated first name, last name, and department fields had to remain consistent across reloads.
+* Creating unique IDs for newly added users because the mock API always returns the same ID.
+* Combining search, filtering, sorting, and pagination while keeping the UI synchronized.
+
+---
 
 ## Future Improvements
 
-- Persist data to a real backend or browser storage
-- Inline editing directly in the table
-- Bulk selection and bulk delete
-- Column visibility toggles and saved filter presets
-- Toast notifications for create, update, and delete actions
-- Unit and integration tests
+* Connect to a real backend database
+* Authentication and authorization
+* Persistent storage
+* Bulk user operations
+* Export data to CSV or Excel
+* Column customization
+* Toast notifications
+* Dark mode
+* Unit testing
+* Integration testing
+* End-to-end testing using Cypress
+
+---
+
+## Author
+
+**Thirumala Narasimha Poluru**
+
+GitHub: https://github.com/Thiru7869
+
+---
+
+## License
+
+This project was developed as part of a JavaScript technical assignment for evaluation purposes.
